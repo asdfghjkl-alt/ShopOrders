@@ -89,18 +89,14 @@ function ProductEditItem({ item, onDetail }) {
         <span className="d-lg-none">page : </span>
         {page}
       </div>
-      <Form.Group className="mx-auto col-10 col-lg-2">
-        <Form.Control
-          required
-          type="number"
-          name="stock"
-          value={product.stock}
-          onChange={handleChange}
+      <div className="col-lg-1">
+        <input
+          type="checkbox"
+          name="gst"
+          className="form-control"
+          disabled={true}
+          checked={gst}
         />
-      </Form.Group>
-      <div className="col-10 mx-auto col-lg-1">
-        <span className="d-lg-none">gst : </span>
-        {gst ? <p>true</p> : <p>false</p>}
       </div>
       <Form.Group className="col-10 mx-auto col-lg-1">
         <Form.Control

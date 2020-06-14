@@ -36,9 +36,18 @@ function ProductItem({ item, onDetail }) {
         <span className="d-lg-none">stock : </span>
         {stock}
       </div>
-      <div className="col-10 mx-auto col-lg-1">
+      {/* <div className="col-10 mx-auto col-lg-1">
         <span className="d-lg-none">gst : </span>
         {gst ? <p>true</p> : <p>false</p>}
+      </div> */}
+      <div className="col-lg-1">
+        <input
+          type="checkbox"
+          name="gst"
+          className="form-control"
+          disabled={true}
+          checked={gst}
+        />
       </div>
       <div className="col-10 mx-auto col-lg-1">
         <span className="d-lg-none">price : </span>
@@ -52,9 +61,14 @@ function ProductItem({ item, onDetail }) {
         <span className="d-lg-none">info : </span>
         {info}
       </div>
-      <div className="col-10 mx-auto col-lg-2">
-        <span className="d-lg-none">onShelf : </span>
-        {onShelf ? <p>true</p> : <p>false</p>}
+      <div className="col-lg-2">
+        <input
+          type="checkbox"
+          name="onShelf"
+          className="form-control"
+          disabled={true}
+          checked={onShelf}
+        />
       </div>
       <div className="col-10 mx-auto col-lg-1">
         <button

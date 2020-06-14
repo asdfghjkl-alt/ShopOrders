@@ -11,7 +11,7 @@ function CartItem({ item }) {
       <div className="col-10 mx-auto col-lg-2 text-center">
         <img
           src={x}
-          style={{ width: '5rem', height: '5rem' }}
+          style={{ width: '6rem', height: '6rem' }}
           className="img-fluid"
           alt="product"
         />
@@ -21,8 +21,7 @@ function CartItem({ item }) {
         {title}
       </div>
       <div className="col-10 mx-auto col-lg-2 text-center">
-        <span className="d-lg-none">price : </span>
-        {price}
+        <span className="d-lg-none">price : </span>$ {price}
       </div>
       <div className="col-10 mx-auto col-lg-2 text-center">
         <div className="d-flex justify-content-center">

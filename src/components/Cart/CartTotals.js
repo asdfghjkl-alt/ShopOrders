@@ -23,6 +23,13 @@ function CartTotals(props) {
             <Link to="/products">
               <Button variant="outline-warning">Go Back To Shop</Button>
             </Link>
+            <p> </p>
+            <Link to="/pay">
+              <Button variant="success">
+                <i className="fa fa-id-card" aria-hidden="true"></i> Pay By Card
+              </Button>
+            </Link>
+            <p> </p>
             <h5>
               <span className="text-title">GST :</span>
               <strong>$ {parseFloat(tax.toFixed(2))}</strong>

@@ -45,11 +45,11 @@ function Details() {
                 price : <span>$</span> {detailProduct.price}
               </strong>
             </h4>
+            <p className="text-capitalize font-weight-bold mt-3 mb-0">
+              some info about product:
+            </p>
+            <p className="text-muted lead">{detailProduct.info}</p>
           </div>
-          <p className="text-capitalize font-weight-bold mt-3 mb-0">
-            some info about product:
-          </p>
-          <p className="text-muted lead">{detailProduct.info}</p>
           <div>
             <Link to="/">
               <button className="button">Go to shop</button>

@@ -14,22 +14,29 @@ function ProductProvider(props) {
         process.env.REACT_APP_BACKEND_URL + 'products'
       );
       setProducts(resExs.data);
-      if (auth.token) {
-        resExs = await axios.get(process.env.REACT_APP_BACKEND_URL + 'orders', {
-          headers: { Authorization: 'Bearer ' + auth.token },
-        });
-        setCart(resExs.data.cart);
+      let localData = localStorage.getItem('cart');
+      localData = JSON.parse(localData);
+      if (!localData) {
+        setCart([]);
+        localStorage.setItem('cart', JSON.stringify([]));
+      } else if (localData.length > 0) {
+        setCart(localData);
+        localStorage.setItem('cart', JSON.stringify(localData));
       } else {
         setCart([]);
+        localStorage.setItem('cart', JSON.stringify([]));
       }
     } catch (error) {
       console.error(error);
     }
-  }, [auth]);
+  }, []);
 
-  const updateStock = async (x, Booking) => {
+  const updateStock = async (Booking, id) => {
     try {
-      await axios.post(x, Booking);
+      await axios.post(
+        process.env.REACT_APP_BACKEND_URL + '/products/update/' + id.toString(),
+        Booking
+      );
     } catch (error) {
       console.log(error);
     }
@@ -39,82 +46,81 @@ function ProductProvider(props) {
 
   useEffect(() => {
     searchForData();
-  }, [auth.login, auth.token, auth.isLoggedIn, searchForData]);
+  }, [auth.login, auth.token, auth.isLoggedIn, searchForData, cart]);
 
   async function addToCart(product) {
-    if (auth.token) {
-      let resExs = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + 'orders/' + product._id,
-        '',
-        {
-          headers: { Authorization: 'Bearer ' + auth.token },
-        }
-      );
+    let localData = localStorage.getItem('cart');
+    localData = JSON.parse(localData);
 
-      resExs = await axios.get(process.env.REACT_APP_BACKEND_URL + 'orders', {
-        headers: { Authorization: 'Bearer ' + auth.token },
-      });
+    const updatedItemIndex = localData.findIndex((item) => {
+      return item.productId._id.toString() === product._id.toString();
+    });
 
-      setCart(resExs.data.cart);
+    if (updatedItemIndex < 0 || localData.length === 0) {
+      localData.push({ productId: product, quantity: 1 });
+    } else {
+      const updatedItem = localData[updatedItemIndex];
 
-      var x = 'http://localhost:5000/products/update/' + product._id;
-      const Booking = {
-        thing: 1,
-      };
-      updateStock(x, Booking);
+      updatedItem.quantity += 1;
+
+      localData[updatedItemIndex] = updatedItem;
     }
+
+    localStorage.setItem('cart', JSON.stringify(localData));
+
+    setCart(localData);
+
+    // var x = 'http://localhost:5000/products/update/' + product._id;
+    // const Booking = {
+    //   thing: 1,
+    // };
+    // updateStock(x, Booking);
   }
 
   async function decrement(product) {
-    if (auth.token) {
-      try {
-        let resExs = await axios.post(
-          process.env.REACT_APP_BACKEND_URL + 'orders/decrease/' + product._id,
-          '',
-          {
-            headers: { Authorization: 'Bearer ' + auth.token.toString() },
-          }
-        );
+    let localData = localStorage.getItem('cart');
+    localData = JSON.parse(localData);
 
-        resExs = await axios.get(process.env.REACT_APP_BACKEND_URL + 'orders', {
-          headers: { Authorization: 'Bearer ' + auth.token },
-        });
+    const updatedItemIndex = localData.findIndex((item) => {
+      return item.productId._id.toString() === product._id.toString();
+    });
 
-        setCart(resExs.data.cart);
+    if (updatedItemIndex > -1) {
+      const updatedItem = localData[updatedItemIndex];
 
-        var x = 'http://localhost:5000/products/update/' + product._id;
-        const Booking = {
-          thing: -1,
-        };
-        updateStock(x, Booking);
-      } catch (err) {
-        console.log(err);
+      updatedItem.quantity -= 1;
+
+      localData[updatedItemIndex] = updatedItem;
+
+      if (updatedItem.quantity === 0) {
+        localData.splice(updatedItemIndex, 1);
       }
+
+      localStorage.setItem('cart', JSON.stringify(localData));
     }
+
+    setCart([...localData]);
   }
 
   async function removeItem(product) {
-    if (auth.token) {
-      let resExs = await axios.post(
-        process.env.REACT_APP_BACKEND_URL +
-          `orders/remove/${product._id.toString()}`,
-        '',
-        {
-          headers: { Authorization: 'Bearer ' + auth.token },
-        }
-      );
+    let localData = localStorage.getItem('cart');
+    localData = JSON.parse(localData);
 
-      resExs = await axios.get(process.env.REACT_APP_BACKEND_URL + 'orders', {
-        headers: { Authorization: 'Bearer ' + auth.token },
-      });
+    const updatedItemIndex = localData.findIndex((item) => {
+      return item.productId._id.toString() === product._id.toString();
+    });
 
-      var x = 'http://localhost:5000/products/update/' + product._id;
-      const Booking = {
-        thing: product.quantity,
-      };
-      setCart(resExs.data.cart);
-      updateStock(x, Booking);
-    }
+    localData.splice(updatedItemIndex, 1);
+
+    localStorage.setItem('cart', JSON.stringify(localData));
+
+    setCart([...localData]);
+  }
+
+  async function removeAll() {
+    localStorage.setItem('cart', JSON.stringify([]));
+
+    setCart([]);
   }
 
   // function addTotals() {
@@ -138,6 +144,8 @@ function ProductProvider(props) {
         decrement: decrement,
         removeItem: removeItem,
         searchForData: searchForData,
+        removeAll: removeAll,
+        updateStock: updateStock,
       }}
     >
       {props.children}

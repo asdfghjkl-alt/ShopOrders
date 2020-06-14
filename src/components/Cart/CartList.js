@@ -7,7 +7,7 @@ function CartList(props) {
   return (
     <div className="container-fluid">
       {cart.map((item) => {
-        return <CartItem key={item._id} item={item} />;
+        return <CartItem key={item.productId._id} item={item} />;
       })}
     </div>
   );

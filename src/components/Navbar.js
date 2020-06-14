@@ -45,21 +45,45 @@ function Navbars() {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-5">
-          <Link
-            to="/fruit"
-            className="nav-link"
-            style={{ color: 'chartreuse' }}
-          >
+          <Link to="/fruit" className="nav-link">
             <i className="fas fa-apple-alt"></i> Fruit
           </Link>
           <Link to="/vegetables" className="nav-link">
             <i className="fas fa-lemon"></i> Vegetables
           </Link>
           {auth.admin && (
-            <Link to="/add" className="nav-link" style={{ color: 'red' }}>
-              <i className="fas fa-plus" style={{ color: 'red' }}></i> Products
-              add
-            </Link>
+            <React.Fragment>
+              <Link to="/add" className="nav-link" style={{ color: 'red' }}>
+                <i className="fas fa-plus" style={{ color: 'red' }}></i>{' '}
+                Products add
+              </Link>
+              <Link to="/users" className="nav-link" style={{ color: 'red' }}>
+                <i className="fas fa-edit" style={{ color: 'red' }}></i> Users
+              </Link>
+            </React.Fragment>
+          )}
+          {auth.isLoggedIn && (
+            <React.Fragment>
+              <Link
+                to="/useredit"
+                className="nav-link"
+                style={{ color: 'red' }}
+              >
+                <i className="fas fa-sign" style={{ color: 'red' }}></i> Users
+                edit
+              </Link>
+              <Link
+                to="/getorders"
+                className="nav-link"
+                style={{ color: 'green' }}
+              >
+                <i
+                  className="fas fa-money-check-alt"
+                  style={{ color: 'green' }}
+                ></i>{' '}
+                My Orders
+              </Link>
+            </React.Fragment>
           )}
         </Nav>
       </Navbar.Collapse>
